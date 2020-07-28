@@ -7,8 +7,8 @@ https://www.ssa.gov/oact/babynames/names.zip
 
 ## Data downloads
 
-- Mirror of national names.zip: [ssa-national.zip](data/collected/ssa-national.zip)
-- Compilation of all national data into one CSV file: [https://github.com/dantalk/sql-intro-ssa-names/raw/master/data/compiled/ssa-national-all-years.csv](data/compiled/ssa-national-all-years.csv)
+- Mirror of national names.zip: [ssa-national.zip](https://raw.githubusercontent.com/dantalk/sql-intro-ssa-names/master/data/collected/ssa-national.zi)
+- Compilation of all national data into one CSV file: [ssa-national-all-years.csv](https://raw.githubusercontent.com/dantalk/sql-intro-ssa-names/master/data/compiled/ssa-national-all-years.csv)
 - SQLite file of national data, years 1950-2010: [ssanames-1950-2010.sqlite](https://raw.githubusercontent.com/dantalk/sql-intro-ssa-names/master/data/packaged/ssanames-1950-2010.sqlite) – this is what we'll be using for the exercise (it's small enough to save on Github, i.e. <100MB)
 
 ## Development
