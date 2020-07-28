@@ -1,4 +1,4 @@
-.DEFAULT_GOAL := help
+.DEFAULT_GOAL := ALL
 .PHONY : clean help ALL
 
 
@@ -8,37 +8,70 @@ help:
 ALL: compile
 
 
-compile: data/compiled/ssa-national.csv
+clean:
+	# Deleting data/
+	[ -d ./data/ ] && rm -r ./data/
 
-data/compiled/ssa-national.csv: unpack
-	@echo "Compiling all yob*.txt into single file..."
-	@echo "Number of yob files:"
+
+
+compile: compile_national compile_samples
+
+
+compile_samples: data/compiled/ssa-national-sample.csv
+
+data/compiled/ssa-national-sample.csv: data/compiled/ssa-national.csv
+	###########################
+	# Compiling national sample
+	cat $< \
+		| xsv search '\d{3}0' -s year \
+		> $@
+		wc -l $@
+
+
+compile_national: data/compiled/ssa-national.csv
+
+data/compiled/ssa-national.csv: data/collected/ssa-national/yob2018.txt
+	##############################################
+	# Compile individual yob*.txt into single file
+	# Number of yob*.txt files:
 	find data/collected/ssa-national/yob*.txt | wc -l
 
-	mkdir -p data/compiled
-	echo "year,name,sex,count" > data/compiled/ssa-national.csv
-	rg '^\w+' --no-heading --no-line-number data/collected/ssa-national/*.txt \
-	    | rg '(\d{4})\.txt:(\w+),([MF]),(\d+)' -or '$1,$2,$3,$4' \
-	    >> data/compiled/ssa-national.csv
+	mkdir -p $(dir $@)
+	echo "year,name,sex,count" > $@
+	rg '^\w+' --no-heading --no-line-number \
+		      --sort path  $(dir $<)*.txt \
+	    | rg '(\d{4})\.txt:(\w+),([MF]),(\d+)' -or '$$1,$$2,$$3,$$4' \
+	    >> $@
 
-	@echo 'Number of lines compiled:'
-	wc -l data/compiled/ssa-national.csv
+
+	head -n5 $@
+	tail -n5 $@
+
+	# Number of lines compiled:
+	wc -l $@
 
 unpack: data/collected/ssa-national/yob2018.txt
 
-data/collected/ssa-national/yob2018.txt: fetch
-	unzip -q -o data/collected/ssa-national.zip -d data/collected/ssa-national
+data/collected/ssa-national/yob2018.txt: data/collected/ssa-national.zip
+	############################
+	# Unzipping fetched zip file (and overwriting existing files)
+	mkdir -p $(dir $@)
+	tar -xmf $< --directory $(dir $@)
 
-	@echo "Number of yob files:"
-	find data/collected/ssa-national/yob*.txt | wc -l
 
-	@echo 'Number of lines collected:'
-	cat data/collected/ssa-national/yob*.txt | wc -l
+	# Number of yob*.txt files unpacked
+	find $(dir $@)yob*.txt | wc -l
+
+	# Number of lines in unpacked files
+	cat $(dir $@)yob*.txt | wc -l
 
 
 
 fetch: data/collected/ssa-national.zip
+
 data/collected/ssa-national.zip:
-	mkdir -p data/collected
-	curl -Lo data/collected/ssa-national.zip https://www.ssa.gov/oact/babynames/names.zip
+	###############################
+	# Downloading data from ssa.gov
+	mkdir -p $(dir $@)
+	curl -Lo $@ https://www.ssa.gov/oact/babynames/names.zip
 

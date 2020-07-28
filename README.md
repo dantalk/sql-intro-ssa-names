@@ -11,5 +11,5 @@ https://www.ssa.gov/oact/babynames/names.zip
 To rebuild the data:
 
 ```sh
-$ make ALL
+$ make clean && make
 ```
