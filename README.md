@@ -1,6 +1,15 @@
-# quickdataproject-template
+# SQLite+DB Browser intro using SSA baby names
 
-**Dan's template for quickie data-wrangling projects**
+Data comes from here:
+https://www.ssa.gov/oact/babynames/limits.html
 
-Basically like [pydataproject-template](https://github.com/dannguyen/pydataproject-template), but without Python library stuff. Because a lot of projects I'm just writing one-off shell and Python scripts
+https://www.ssa.gov/oact/babynames/names.zip
 
+
+## Development
+
+To rebuild the data:
+
+```sh
+$ make ALL
+```
